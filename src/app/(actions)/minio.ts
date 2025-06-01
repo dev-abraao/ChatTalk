@@ -8,7 +8,7 @@ import {
   PutBucketPolicyCommand,
 } from "@aws-sdk/client-s3";
 
-const MINIO_BUCKET_NAME = "images";
+const MINIO_BUCKET_NAME = "media";
 
 const s3Client = new S3Client({
   endpoint: "https://minio.slocksert.dev/",
@@ -57,13 +57,13 @@ async function ensureBucketExists() {
 }
 
 interface FileData {
-  buffer: Buffer;
+  buffer: Buffer | number[];
   originalname: string;
   mimetype: string;
   size: number;
 }
 
-export async function getImageUploadUrl(
+export async function getFileUploadUrl(
   file: FileData,
   fileType: string,
   messageId: string
@@ -73,7 +73,11 @@ export async function getImageUploadUrl(
 
     const fileName = `${messageId}-${file.originalname.replace(/\s+/g, "-")}`;
 
-    const fileContent = Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+    const fileContent = Buffer.isBuffer(file.buffer)
+      ? file.buffer
+      : Array.isArray(file.buffer)
+      ? Buffer.from(file.buffer)
+      : Buffer.from(file.buffer);
 
     const command = new PutObjectCommand({
       Bucket: MINIO_BUCKET_NAME,
@@ -84,16 +88,110 @@ export async function getImageUploadUrl(
     });
 
     const result = await s3Client.send(command);
-    console.log("Image upload successful:", result);
+    console.log("File upload successful:", result);
 
-    const imageUrl = `https://minio.slocksert.dev/${MINIO_BUCKET_NAME}/${fileName}`;
-    console.log("Generated image URL:", imageUrl);
+    const fileUrl = `https://minio.slocksert.dev/${MINIO_BUCKET_NAME}/${fileName}`;
+    console.log("Generated file URL:", fileUrl);
 
     return {
-      imageUrl: imageUrl,
+      fileUrl: fileUrl,
     };
   } catch (error) {
-    console.error("Error uploading image to MinIO:", error);
-    throw new Error("Failed to upload image");
+    console.error("Error uploading file to MinIO:", error);
+    throw new Error("Failed to upload file");
   }
+}
+
+export async function uploadFile(
+  file: FileData,
+  prefix: string = "general",
+  customFileName?: string
+): Promise<{ fileUrl: string }> {
+  try {
+    await ensureBucketExists();
+
+    // Gerar nome único do arquivo
+    const timestamp = Date.now();
+    const sanitizedOriginalName = file.originalname.replace(/\s+/g, "-");
+    const fileName = customFileName
+      ? `${prefix}-${customFileName}`
+      : `${prefix}-${timestamp}-${sanitizedOriginalName}`;
+
+    const fileContent = Buffer.isBuffer(file.buffer)
+      ? file.buffer
+      : Array.isArray(file.buffer)
+      ? Buffer.from(file.buffer)
+      : Buffer.from(file.buffer);
+
+    const command = new PutObjectCommand({
+      Bucket: MINIO_BUCKET_NAME,
+      Key: fileName,
+      Body: fileContent,
+      ContentType: file.mimetype,
+      ContentLength: fileContent.length,
+    });
+
+    const result = await s3Client.send(command);
+    console.log("File upload successful:", result);
+
+    const fileUrl = `https://minio.slocksert.dev/${MINIO_BUCKET_NAME}/${fileName}`;
+    console.log("Generated file URL:", fileUrl);
+
+    return {
+      fileUrl: fileUrl,
+    };
+  } catch (error) {
+    console.error("Error uploading file to MinIO:", error);
+    throw new Error("Failed to upload file");
+  }
+}
+
+export async function uploadProfileImage(
+  file: FileData,
+  userId: string
+): Promise<{ fileUrl: string }> {
+  return uploadFile(file, "profile", `${userId}-${Date.now()}`);
+}
+
+export async function uploadMessageImage(
+  file: FileData,
+  messageId: string
+): Promise<{ fileUrl: string }> {
+  return uploadFile(file, "message", messageId);
+}
+
+// Backward compatibility functions
+export async function getImageUploadUrl(
+  file: FileData,
+  fileType: string,
+  messageId: string
+) {
+  const result = await getFileUploadUrl(file, fileType, messageId);
+  return { imageUrl: result.fileUrl };
+}
+
+export async function uploadImage(
+  file: FileData,
+  prefix: string = "general",
+  customFileName?: string
+): Promise<{ imageUrl: string }> {
+  const result = await uploadFile(file, prefix, customFileName);
+  return { imageUrl: result.fileUrl };
+}
+
+// Video-specific functions
+export async function uploadVideo(
+  file: FileData,
+  prefix: string = "video",
+  customFileName?: string
+): Promise<{ videoUrl: string }> {
+  const result = await uploadFile(file, prefix, customFileName);
+  return { videoUrl: result.fileUrl };
+}
+
+export async function uploadMessageVideo(
+  file: FileData,
+  messageId: string
+): Promise<{ videoUrl: string }> {
+  return uploadVideo(file, "message", messageId);
 }

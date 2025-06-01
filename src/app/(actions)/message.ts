@@ -6,8 +6,8 @@ interface SaveMessageProps {
   content: string;
   roomId: string;
   userId: string;
-  imageUrl?: string;
-  type?:"text" | "image";
+  fileUrl?: string;
+  type?: "text" | "image" | "video";
 }
 
 interface MessageWithUser {
@@ -21,19 +21,32 @@ interface MessageWithUser {
   user: {
     id: string;
     username: string;
+    image_url: string | null;
   };
 }
 
-export async function saveMessage({ content, roomId, userId, imageUrl, type = "text" }: SaveMessageProps) {
+export async function saveMessage({
+  content,
+  roomId,
+  userId,
+  fileUrl,
+  type = "text",
+}: SaveMessageProps) {
   try {
-    console.log("Saving message with data:", { content, roomId, userId, imageUrl, type });
-    
+    console.log("Saving message with data:", {
+      content,
+      roomId,
+      userId,
+      fileUrl,
+      type,
+    });
+
     const message = await prisma.messages.create({
       data: {
         content,
         room_id: roomId,
         user_id: userId,
-        image_url: imageUrl || null,
+        image_url: fileUrl || null,
         type: type,
       },
     });
@@ -59,6 +72,7 @@ export async function getMessagesByRoomId(roomId: string) {
           select: {
             id: true,
             username: true,
+            image_url: true, // Incluindo a URL da imagem do usuário
           },
         },
       },
@@ -77,10 +91,28 @@ export async function getMessagesByRoomId(roomId: string) {
       imageUrl: message.image_url,
       type: message.type,
       createdAt: message.created_at,
-      userId: message.user_id
+      userId: message.user_id,
+      userImageUrl: message.user.image_url,
     }));
   } catch (error) {
     console.error("Erro ao buscar mensagens:", error);
     return [];
   }
+}
+
+// Backward compatibility function
+export async function saveMessageWithImageUrl({
+  content,
+  roomId,
+  userId,
+  imageUrl,
+  type = "text",
+}: {
+  content: string;
+  roomId: string;
+  userId: string;
+  imageUrl?: string;
+  type?: "text" | "image" | "video";
+}) {
+  return saveMessage({ content, roomId, userId, fileUrl: imageUrl, type });
 }

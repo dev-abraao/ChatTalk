@@ -26,6 +26,7 @@ export const RoomFormSchema = z.object({
 
 export const NameModalSchema = z.object({
   username: z.string().min(1, { message: "Insira um nome de exibição." }),
+  bio: z.string().optional(),
 });
 
 export type FormState =
@@ -62,13 +63,19 @@ export type RoomFormState =
     }
   | undefined;
 
-export type nameModalState = {
-  errors?: {
-    username?: string[];
-  };
-  message?: string;
-  success?: boolean;
-} | void;
+export type profileModalState =
+  | {
+      errors?: {
+        username?: string[];
+        bio?: string[];
+        image?: string[];
+      };
+      message?: string;
+      data?: {
+        success?: boolean;
+      };
+    }
+  | undefined;
 
 export type SessionPayload = {
   userId: string;
@@ -80,6 +87,12 @@ export interface IUser {
   login: string;
   username: string;
   password: string;
+}
+
+export interface UserProfile {
+  username: string;
+  bio: string | null;
+  image_url: string | null;
 }
 
 export interface IRoom {

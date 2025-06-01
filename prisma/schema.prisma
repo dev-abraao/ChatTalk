@@ -8,34 +8,36 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  login         String         @unique
-  username      String         @db.VarChar(30)
-  password      String
-  messages      Messages[]
-  ownedRooms    Rooms[]
-  roomsJoined   UserInRoom[]
-  hasCreatedRoom Boolean       @default(false)
+  id             String       @id @default(uuid())
+  login          String       @unique
+  username       String       @unique @db.VarChar(30)
+  image_url      String?
+  bio            String?
+  password       String
+  messages       Messages[]
+  ownedRooms     Rooms[]
+  roomsJoined    UserInRoom[]
+  hasCreatedRoom Boolean      @default(false)
 }
 
 model Rooms {
-  id              String         @id @default(uuid())
+  id              String       @id @default(uuid())
   name            String
   description     String?
   owner_id        String
-  created_at      DateTime       @default(now())
+  created_at      DateTime     @default(now())
   messages        Messages[]
-  owner           User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  is_default_room Boolean        @default(false)
+  owner           User         @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  is_default_room Boolean      @default(false)
   members         UserInRoom[]
 }
 
 model UserInRoom {
-  userId        String
-  roomId        String
-  joinedAt      DateTime       @default(now())
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room          Rooms          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId   String
+  roomId   String
+  joinedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room     Rooms    @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@id([userId, roomId])
 }
