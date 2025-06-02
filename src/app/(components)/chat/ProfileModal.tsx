@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { updateProfile } from "@/(actions)/user";
 import { UserProfile } from "@/(lib)/definitions";
 import { getProfile } from "@/(actions)/user";
+import Image from "next/image";
 
 export default function ProfileModal() {
   const [showModal, setShowModal] = useState(false);
@@ -77,7 +78,7 @@ export default function ProfileModal() {
                   onClick={triggerFileInput}
                 >
                   {imagePreview ? (
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
                       className="w-full h-full object-cover"

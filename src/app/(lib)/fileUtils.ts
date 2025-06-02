@@ -7,10 +7,10 @@ export function isVideoFile(mimetype: string): boolean {
   return mimetype.startsWith("video/");
 }
 
-export function getFileType(mimetype: string): "image" | "video" | "other" {
+export function getFileType(mimetype: string): "image" | "video" | undefined {
   if (isImageFile(mimetype)) return "image";
   if (isVideoFile(mimetype)) return "video";
-  return "other";
+  return undefined;
 }
 
 export function getSupportedFileTypes(): string[] {
