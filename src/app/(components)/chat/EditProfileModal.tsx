@@ -4,9 +4,10 @@ import { useActionState } from "react";
 import { updateProfile } from "@/(actions)/user";
 import { UserProfile } from "@/(lib)/definitions";
 import { getProfile } from "@/(actions)/user";
+import { FiUser } from "react-icons/fi";
 import Image from "next/image";
 
-export default function ProfileModal() {
+export default function EditProfileModal() {
   const [showModal, setShowModal] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -59,7 +60,7 @@ export default function ProfileModal() {
         onClick={openModal}
         className="bg-[#7A80DA] hover:bg-[#5a62ce] text-white font-bold py-2 px-4 rounded-lg"
       >
-        Editar Perfil
+        <FiUser className="" />
       </button>
 
       {showModal && (
@@ -80,6 +81,8 @@ export default function ProfileModal() {
                   {imagePreview ? (
                     <Image
                       src={imagePreview}
+                      width={96}
+                      height={96}
                       alt="Preview"
                       className="w-full h-full object-cover"
                     />
