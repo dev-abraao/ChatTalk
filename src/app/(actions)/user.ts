@@ -155,7 +155,14 @@ export async function updateProfile(
     }
 
     // Atualizar perfil no banco
-    const updateData: any = {
+
+    interface UpdateData {
+      username: string;
+      bio?: string | null;
+      image_url?: string | null;
+    }
+
+    const updateData: UpdateData = {
       username: username,
       bio: bio || null,
     };

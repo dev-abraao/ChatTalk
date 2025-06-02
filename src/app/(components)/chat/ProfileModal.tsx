@@ -1,5 +1,4 @@
 "use client";
-import { fetchUsername } from "@/(actions)/user";
 import { useState, useEffect, useRef } from "react";
 import { useActionState } from "react";
 import { updateProfile } from "@/(actions)/user";
@@ -40,6 +39,7 @@ export default function ProfileModal() {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
+      console.log("Selected file:", selectedImage);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
