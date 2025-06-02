@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useMessages } from "@ably/chat";
-import { fetchUsername, getProfile } from "@/(actions)/user";
-import ProfileModal from "./ProfileModal";
+import { getProfile } from "@/(actions)/user";
 import { getMessagesByRoomId } from "@/(actions)/message";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -64,6 +63,7 @@ function ChatBox() {
 
       setMyUsername(user.username);
       setImageUrl(user.image_url);
+      console.log(ImageUrl)
     };
     getUsername();
   }, []);
