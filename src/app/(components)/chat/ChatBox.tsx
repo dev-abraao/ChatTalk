@@ -66,7 +66,7 @@ function ChatBox() {
       console.log(ImageUrl)
     };
     getUsername();
-  }, []);
+  }, [ImageUrl]);
 
   useEffect(() => {
     if (roomId) {
