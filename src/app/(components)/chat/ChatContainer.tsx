@@ -1,17 +1,38 @@
 "use client";
 
+import { useState } from "react";
 import Header from "./Header";
 import ChatBox from "./ChatBox";
 import InputText from "./InputText";
 import ViewRooms from "../rooms/viewRooms";
-// zz
+import CreateRoomModal from "../rooms/createRoomModal";
+
 export default function ChatContainer() {
+  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [refreshRooms, setRefreshRooms] = useState(0);
+
+  const handleOpenCreateRoomModal = () => {
+    setIsCreateRoomModalOpen(true);
+  };
+
+  const handleCloseCreateRoomModal = () => {
+    setIsCreateRoomModalOpen(false);
+  };
+
+  const handleRoomCreated = () => {
+    setIsCreateRoomModalOpen(false);
+    setRefreshRooms(prev => prev + 1);
+  };
+
   return (
     <div className="h-screen flex flex-col">
       <Header />
       <div className="flex flex-1 overflow-hidden relative">
         <div className="z-30">
-          <ViewRooms />
+          <ViewRooms 
+            onOpenCreateRoomModal={handleOpenCreateRoomModal}
+            refreshTrigger={refreshRooms}
+          />
         </div>
         <div className="flex-1 flex flex-col w-full absolute inset-0">
           <div className="flex-1 overflow-scroll">
@@ -22,6 +43,12 @@ export default function ChatContainer() {
           </div>
         </div>
       </div>
+      
+      <CreateRoomModal
+        isOpen={isCreateRoomModalOpen}
+        onClose={handleCloseCreateRoomModal}
+        onRoomCreated={handleRoomCreated}
+      />
     </div>
   );
 }

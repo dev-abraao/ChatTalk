@@ -11,7 +11,12 @@ import { hasUserCreatedRoom } from "@/(actions)/user";
 
 type TabType = "created" | "joined" | "explore";
 
-export default function ViewRooms() {
+interface ViewRoomsProps {
+  onOpenCreateRoomModal: () => void;
+  refreshTrigger: number;
+}
+
+export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: ViewRoomsProps) {
   const [categorizedRooms, setCategorizedRooms] = useState<CategorizedRooms>({
     createdRooms: [],
     joinedRooms: [],
@@ -50,6 +55,13 @@ export default function ViewRooms() {
     fetchRooms();
     fetchUserStatus();
   }, []);
+
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchRooms();
+      fetchUserStatus();
+    }
+  }, [refreshTrigger]);
 
   const handleDeleteRoom = async (e: React.MouseEvent, roomId: string) => {
     e.preventDefault();
@@ -94,7 +106,7 @@ export default function ViewRooms() {
       </button>
 
       <div 
-        className={`bg-[#F4F4F4] rounded w-64 border-r border-gray-200 fixed left-0 top-[4.8rem] sm:top-[4.2rem] bottom-0 flex flex-col z-10 transition-transform duration-300 ${
+        className={`bg-[#F4F4F4] rounded w-64 border-r border-gray-200 fixed left-0 top-[4.2rem] sm:top-[4.2rem] bottom-0 flex flex-col z-10 transition-transform duration-300 ${
           isVisible ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -193,10 +205,9 @@ export default function ViewRooms() {
         {activeTab === "created" && (
           <div className="p-2 mt-auto">
             {userCanCreateRoom ? (
-              <CreateRoomForm onRoomCreated={() => {
-                fetchRooms();
-                fetchUserStatus();
-              }} />
+              <CreateRoomForm 
+                onOpenCreateRoomModal={onOpenCreateRoomModal}
+              />
             ) : (
               <div className="text-center p-2 text-sm text-gray-600 bg-gray-100 rounded-md">
                 Você já criou uma sala. Apenas uma sala por usuário é permitida.
