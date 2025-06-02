@@ -140,9 +140,6 @@ function ChatBox() {
     username: string,
     userImageUrl: string | null
   ) => {
-    if (username === myUsername) {
-      return;
-    }
     setSelectedUserProfile({ username, userImageUrl });
     setIsUserProfileModalOpen(true);
   };

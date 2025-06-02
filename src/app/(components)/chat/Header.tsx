@@ -1,5 +1,5 @@
 import LogoutBtn from "../auth/LogoutBtn";
-import ProfileModal from "./ProfileModal";
+import EditProfileModal from "./EditProfileModal";
 
 const Header = () => {
   return (
@@ -8,7 +8,7 @@ const Header = () => {
         ChatTalk!
       </h5>
       <div className="flex flex-row gap-1 items-center">
-        <ProfileModal />
+        <EditProfileModal />
         <LogoutBtn />
       </div>
     </div>
