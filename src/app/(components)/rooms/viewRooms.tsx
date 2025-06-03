@@ -16,11 +16,14 @@ interface ViewRoomsProps {
   refreshTrigger: number;
 }
 
-export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: ViewRoomsProps) {
+export default function ViewRooms({
+  onOpenCreateRoomModal,
+  refreshTrigger,
+}: ViewRoomsProps) {
   const [categorizedRooms, setCategorizedRooms] = useState<CategorizedRooms>({
     createdRooms: [],
     joinedRooms: [],
-    otherRooms: []
+    otherRooms: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,8 +69,12 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
   const handleDeleteRoom = async (e: React.MouseEvent, roomId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (confirm("Tem certeza que deseja excluir esta sala? Esta ação não pode ser desfeita.")) {
+
+    if (
+      confirm(
+        "Tem certeza que deseja excluir esta sala? Esta ação não pode ser desfeita."
+      )
+    ) {
       try {
         setLoading(true);
         await deleteRoom(roomId);
@@ -99,15 +106,17 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
     <>
       <button
         onClick={() => setIsVisible(!isVisible)}
-        className="fixed z-20 top-[1rem] left-2 bg-[#7A80DA] text-white p-2 rounded-full shadow-lg"
-        aria-label={isVisible ? "Fechar painel de salas" : "Abrir painel de salas"}
+        className="fixed z-40 top-[1rem] left-2 bg-[#7A80DA] text-white p-2 rounded-full shadow-lg"
+        aria-label={
+          isVisible ? "Fechar painel de salas" : "Abrir painel de salas"
+        }
       >
         {isVisible ? <MdClose size={20} /> : <MdMenu size={20} />}
       </button>
 
-      <div 
+      <div
         className={`bg-[#F4F4F4] rounded w-64 border-r border-gray-200 fixed left-0 top-[4.2rem] sm:top-[4.2rem] bottom-0 flex flex-col z-10 transition-transform duration-300 ${
-          isVisible ? 'translate-x-0' : '-translate-x-full'
+          isVisible ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex justify-between items-center border-b border-gray-200">
@@ -126,8 +135,8 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
           <button
             onClick={() => setActiveTab("created")}
             className={`flex-1 py-2 px-3 text-sm font-medium ${
-              activeTab === "created" 
-                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]" 
+              activeTab === "created"
+                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             }`}
           >
@@ -136,8 +145,8 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
           <button
             onClick={() => setActiveTab("joined")}
             className={`flex-1 py-2 px-3 text-sm font-medium ${
-              activeTab === "joined" 
-                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]" 
+              activeTab === "joined"
+                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             }`}
           >
@@ -146,8 +155,8 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
           <button
             onClick={() => setActiveTab("explore")}
             className={`flex-1 py-2 px-3 text-sm font-medium ${
-              activeTab === "explore" 
-                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]" 
+              activeTab === "explore"
+                ? "border-b-2 border-[#7A80DA] text-[#7A80DA]"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             }`}
           >
@@ -166,8 +175,10 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
             {displayedRooms().length === 0 ? (
               <p className="text-gray-500 text-center p-4">
                 {activeTab === "created" && "Você ainda não criou nenhuma sala"}
-                {activeTab === "joined" && "Você ainda não entrou em nenhuma sala"}
-                {activeTab === "explore" && "Nenhuma sala disponível para explorar"}
+                {activeTab === "joined" &&
+                  "Você ainda não entrou em nenhuma sala"}
+                {activeTab === "explore" &&
+                  "Nenhuma sala disponível para explorar"}
               </p>
             ) : (
               displayedRooms().map((room) => (
@@ -182,13 +193,16 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
                       </p>
                       <p className="text-xs text-gray-500">
                         Criada em:{" "}
-                        {format(new Date(room.created_at), "dd/MM/yyyy HH:mm:ss")}
+                        {format(
+                          new Date(room.created_at),
+                          "dd/MM/yyyy HH:mm:ss"
+                        )}
                       </p>
                     </div>
                   </Link>
-                  
+
                   {activeTab === "created" && (
-                    <button 
+                    <button
                       onClick={(e) => handleDeleteRoom(e, room.id)}
                       className="absolute top-3 right-3 p-1.5 text-gray-500 hover:text-red-500 hover:bg-gray-100 rounded-full transition-colors z-10"
                       title="Excluir sala"
@@ -201,13 +215,11 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
             )}
           </div>
         )}
-        
+
         {activeTab === "created" && (
           <div className="p-2 mt-auto">
             {userCanCreateRoom ? (
-              <CreateRoomForm 
-                onOpenCreateRoomModal={onOpenCreateRoomModal}
-              />
+              <CreateRoomForm onOpenCreateRoomModal={onOpenCreateRoomModal} />
             ) : (
               <div className="text-center p-2 text-sm text-gray-600 bg-gray-100 rounded-md">
                 Você já criou uma sala. Apenas uma sala por usuário é permitida.
@@ -216,9 +228,9 @@ export default function ViewRooms({ onOpenCreateRoomModal, refreshTrigger }: Vie
           </div>
         )}
       </div>
-      
+
       {isVisible && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-30 z-0"
           onClick={() => setIsVisible(false)}
         />
