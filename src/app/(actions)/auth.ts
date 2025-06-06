@@ -87,7 +87,7 @@ export async function signin(state: SignFormState, formData: FormData) {
   });
 
   if (!user) {
-    console.log(user);
+    // console.log(user);
     console.error("Erro: usuário não existe");
     return {
       errors: {

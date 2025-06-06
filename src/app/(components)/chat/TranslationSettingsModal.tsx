@@ -14,19 +14,13 @@ export default function TranslationSettingsModal({
   onClose,
 }: TranslationSettingsModalProps) {
   const { 
-    preferredLanguage, 
-    autoTranslate, 
-    setPreferredLanguage, 
-    setAutoTranslate 
+    preferredLanguage,
+    setPreferredLanguage
   } = useTranslation();
 
   // Usar as funções do contexto diretamente
   const handleLanguageChange = (language: string) => {
     setPreferredLanguage(language);
-  };
-
-  const handleAutoTranslateChange = (enabled: boolean) => {
-    setAutoTranslate(enabled);
   };
 
   // Função para renderizar a bandeira baseada no código do idioma
@@ -86,39 +80,6 @@ export default function TranslationSettingsModal({
             <p className="text-xs text-gray-500 mt-1">
               Idioma padrão para traduzir mensagens
             </p>
-          </div>
-
-          {/* Tradução Automática */}
-          <div>
-            <label className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                checked={autoTranslate}
-                onChange={(e) => handleAutoTranslateChange(e.target.checked)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <div>
-                <div className="text-sm font-medium text-gray-700">
-                  Tradução Automática
-                </div>
-                <div className="text-xs text-gray-500">
-                  Traduzir automaticamente mensagens em outros idiomas
-                </div>
-              </div>
-            </label>
-          </div>
-
-          {/* Informações */}
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">
-              ℹ️ Informações
-            </h3>
-            <ul className="text-xs text-blue-700 space-y-1">
-              <li>• Clique no ícone 🌐 nas mensagens para traduzir</li>
-              <li>• A tradução usa LibreTranslate (gratuito)</li>
-              <li>• Nem todos os idiomas são suportados</li>
-              <li>• A qualidade pode variar dependendo do texto</li>
-            </ul>
           </div>
         </div>
 

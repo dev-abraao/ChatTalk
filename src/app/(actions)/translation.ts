@@ -3,12 +3,11 @@
 import { translator } from '../(lib)/translationService';
 
 export async function translateMessage(text: string, targetLanguage: string, sourceLanguage = 'auto') {
-  console.log('translateMessage server action called:', { text, targetLanguage, sourceLanguage });
+  // Log simplificado apenas se necessário para debug
+  // console.log('translateMessage called:', { text, targetLanguage, sourceLanguage });
   
   try {
-    console.log('Calling translator.translateText...');
     const result = await translator.translateText(text, targetLanguage, sourceLanguage);
-    console.log('Translation service result:', result);
     
     return {
       success: true,

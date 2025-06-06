@@ -33,13 +33,8 @@ export async function saveMessage({
   type = "text",
 }: SaveMessageProps) {
   try {
-    console.log("Saving message with data:", {
-      content,
-      roomId,
-      userId,
-      fileUrl,
-      type,
-    });
+    // Log simplificado - remover em produção se necessário
+    // console.log("Saving message with data:", { content, roomId, userId, fileUrl, type });
 
     const message = await prisma.messages.create({
       data: {
@@ -51,7 +46,7 @@ export async function saveMessage({
       },
     });
 
-    console.log("Mensagem salva:", message.id);
+    // console.log("Mensagem salva:", message.id);
     return message;
   } catch (error) {
     console.error("Erro ao salvar mensagem:", error);
@@ -60,7 +55,7 @@ export async function saveMessage({
 }
 
 export async function getMessagesByRoomId(roomId: string) {
-  console.log("Buscando mensagens para sala:", roomId);
+  // console.log("Buscando mensagens para sala:", roomId);
 
   try {
     const messages = await prisma.messages.findMany({
@@ -82,7 +77,7 @@ export async function getMessagesByRoomId(roomId: string) {
       take: 100,
     });
 
-    console.log(`Encontradas ${messages.length} mensagens na sala ${roomId}`);
+    // console.log(`Encontradas ${messages.length} mensagens na sala ${roomId}`);
 
     return messages.map((message: MessageWithUser) => ({
       id: message.id,
