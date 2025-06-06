@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={lobster.variable}>
       <body className={inter.className}>
-        <AblyProvider>
+        <AblyProvider ABLY_API_KEY={process.env.ABLY_API_KEY}>
           <TranslationProvider>
             {children}
           </TranslationProvider>

@@ -64,7 +64,6 @@ function ChatBox() {
 
       setMyUsername(user.username);
       setImageUrl(user.image_url);
-      console.log(ImageUrl)
     };
     getUsername();
   }, [ImageUrl]);
