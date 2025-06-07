@@ -14,15 +14,17 @@ const AblyContext = createContext<AblyContextType | null>(null);
 export function AblyProvider({
   userId,
   children,
+  ABLY_API_KEY,
 }: {
   userId?: string;
   children: React.ReactNode;
+  ABLY_API_KEY?: string;
 }) {
   const [clients, setClients] = useState<AblyContextType | null>(null);
 
   useEffect(() => {
     const realtimeClient = new Ably.Realtime({
-      key: "NhJcoA.Nyx0fQ:GYtfcRdXXu-_DEno3r8dS8rJBl_ojYaSTVLSfYtaV3U",
+      key: ABLY_API_KEY,
       clientId: userId || "client",
     });
     
@@ -33,7 +35,7 @@ export function AblyProvider({
     return () => {
       realtimeClient?.close();
     };
-  }, [userId]);
+  }, [userId, ABLY_API_KEY]);
 
   if (!clients) {
     return (

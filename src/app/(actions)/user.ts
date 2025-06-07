@@ -12,7 +12,7 @@ export async function getUserId() {
   const session = cookieStore.get("session")?.value;
 
   if (!session) {
-    console.log("Sessão não encontrada");
+    // console.log("Sessão não encontrada");
     return null;
   }
 
@@ -39,7 +39,7 @@ export async function getUser(userId: string): Promise<IUser | null> {
     },
   });
 
-  console.log("User:", user);
+  // console.log("User:", user);
 
   if (!user) {
     console.error("User not found");

@@ -9,6 +9,7 @@ import Image from "next/image";
 import ImageModal from "./ImageModal";
 import VideoModal from "./VideoModal";
 import UserProfileModal from "./UserProfileModal";
+import MessageTranslation from "./MessageTranslation";
 
 interface ChatMessage {
   id?: string;
@@ -63,7 +64,6 @@ function ChatBox() {
 
       setMyUsername(user.username);
       setImageUrl(user.image_url);
-      console.log(ImageUrl)
     };
     getUsername();
   }, [ImageUrl]);
@@ -309,7 +309,10 @@ function ChatBox() {
                     (!hasMedia ||
                       (msg.text !== "📷 Imagem" &&
                         msg.text !== "🎥 Vídeo")) && (
-                      <div className="text-sm">{msg.text}</div>
+                      <MessageTranslation 
+                        originalText={msg.text}
+                        isMyMessage={isMyMessage}
+                      />
                     )}
                 </div>
                 {isMyMessage && (

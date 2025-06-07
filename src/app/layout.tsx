@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Lobster } from "next/font/google";
 import { AblyProvider } from "./contexts/AblyContext";
+import { TranslationProvider } from "./contexts/TranslationContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -28,7 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={lobster.variable}>
       <body className={inter.className}>
-        <AblyProvider>{children}</AblyProvider>
+        <AblyProvider ABLY_API_KEY={process.env.ABLY_API_KEY}>
+          <TranslationProvider>
+            {children}
+          </TranslationProvider>
+        </AblyProvider>
       </body>
     </html>
   );

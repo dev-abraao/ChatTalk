@@ -76,7 +76,7 @@ function InputText() {
           fileUrl,
           type: fileUrl ? fileType || "image" : "text",
         });
-        console.log("Mensagem salva no banco de dados");
+        //console.log("Mensagem salva no banco de dados");
       }
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);

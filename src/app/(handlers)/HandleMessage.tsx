@@ -16,7 +16,7 @@ export default async function HandleMessage(
   const username = await fetchUsername();
   const userId = await getUserId();
   
-  console.log("Username:", username);
+  //console.log("Username:", username);
 
   if (!username || !userId) {
     console.error("Username ou userId não encontrados");
