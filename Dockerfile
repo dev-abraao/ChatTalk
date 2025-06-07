@@ -26,6 +26,10 @@ RUN ls -la prisma && cat prisma/schema.prisma
 # 👇 Geração do Prisma Client
 RUN npx prisma generate
 
+# 👇 Definir variável de ambiente para o build
+ARG NEXT_PUBLIC_ABLY_API_KEY
+ENV NEXT_PUBLIC_ABLY_API_KEY=${NEXT_PUBLIC_ABLY_API_KEY}
+
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
