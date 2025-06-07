@@ -27,7 +27,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ablyKey = await getAblyKey();
+  const ablyKey = process.env.NODE_ENV === "production" ? await getAblyKey() : process.env.NEXT_PUBLIC_ABLY_API_KEY;
   
   if (!ablyKey) {
     console.error('Layout - NEXT_PUBLIC_ABLY_API_KEY is undefined');
