@@ -26,15 +26,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Debug das variáveis de ambiente apenas no desenvolvimento
-  if (process.env.NODE_ENV === 'development') {
-    console.log('ABLY_API_KEY available:', !!process.env.NEXT_PUBLIC_ABLY_API_KEY);
+  const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  
+  if (!ablyKey) {
+    console.error('Layout - NEXT_PUBLIC_ABLY_API_KEY is undefined');
   }
 
   return (
     <html lang="en" className={lobster.variable}>
       <body className={inter.className}>
-        <AblyProvider ABLY_API_KEY={process.env.NEXT_PUBLIC_ABLY_API_KEY}>
+        <AblyProvider ABLY_API_KEY={ablyKey}>
           <TranslationProvider>
             {children}
           </TranslationProvider>

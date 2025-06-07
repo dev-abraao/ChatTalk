@@ -26,9 +26,13 @@ RUN ls -la prisma && cat prisma/schema.prisma
 # 👇 Geração do Prisma Client
 RUN npx prisma generate
 
-# 👇 Definir variável de ambiente para o build
+# 👇 Definir variável de ambiente para o build do Next.js
 ARG NEXT_PUBLIC_ABLY_API_KEY
 ENV NEXT_PUBLIC_ABLY_API_KEY=${NEXT_PUBLIC_ABLY_API_KEY}
+
+RUN echo "=== DEBUGGING ENVIRONMENT VARIABLES ==="
+RUN echo "NEXT_PUBLIC_ABLY_API_KEY: ${NEXT_PUBLIC_ABLY_API_KEY:-NOT_SET}"
+RUN env | grep NEXT_PUBLIC || echo "No NEXT_PUBLIC vars found"
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
@@ -41,6 +45,10 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+
+# 👇 Redefinir variável para o runtime do Next.js standalone
+ARG NEXT_PUBLIC_ABLY_API_KEY
+ENV NEXT_PUBLIC_ABLY_API_KEY=${NEXT_PUBLIC_ABLY_API_KEY}
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
