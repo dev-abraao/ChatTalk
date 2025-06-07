@@ -53,3 +53,8 @@ model Messages {
   room       Rooms    @relation(fields: [room_id], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+model Settings {
+  id        String   @id @default(uuid())
+  ably_key  String?
+}
