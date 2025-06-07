@@ -26,6 +26,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Debug das variáveis de ambiente apenas no desenvolvimento
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ABLY_API_KEY available:', !!process.env.NEXT_PUBLIC_ABLY_API_KEY);
+  }
+
   return (
     <html lang="en" className={lobster.variable}>
       <body className={inter.className}>

@@ -23,6 +23,11 @@ export function AblyProvider({
   const [clients, setClients] = useState<AblyContextType | null>(null);
 
   useEffect(() => {
+    if (!ABLY_API_KEY) {
+      console.error('ABLY_API_KEY is not provided');
+      return;
+    }
+
     const realtimeClient = new Ably.Realtime({
       key: ABLY_API_KEY,
       clientId: userId || "client",
@@ -37,10 +42,15 @@ export function AblyProvider({
     };
   }, [userId, ABLY_API_KEY]);
 
-  if (!clients) {
+  if (!clients || !ABLY_API_KEY) {
     return (
       <div className="flex justify-center items-center h-screen">
         <MdRefresh className="animate-spin h-16 w-16 text-blue-500" />
+        {!ABLY_API_KEY && (
+          <div className="ml-4 text-red-500">
+            Erro: ABLY_API_KEY não configurada
+          </div>
+        )}
       </div>
     );
   }
