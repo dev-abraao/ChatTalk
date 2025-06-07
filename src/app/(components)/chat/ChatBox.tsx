@@ -192,7 +192,7 @@ function ChatBox() {
             </p>
           </div>
         ) : (
-          allMessages.map((msg) => {
+          allMessages.map((msg, index) => {
             const isMyMessage = msg.metadata?.username === myUsername;
             const hasMedia =
               msg.metadata?.imageUrl ||
@@ -204,6 +204,7 @@ function ChatBox() {
               msg.metadata?.fileType ||
               (msg.type === "video" ? "video" : "image");
             const userImageUrl = msg.metadata?.userImageUrl;
+            const isLastFewMessages = index >= allMessages.length - 2; // últimas 2 mensagens
             return (
               <div
                 key={msg.id}
@@ -312,6 +313,7 @@ function ChatBox() {
                       <MessageTranslation 
                         originalText={msg.text}
                         isMyMessage={isMyMessage}
+                        isLastFewMessages={isLastFewMessages}
                       />
                     )}
                 </div>

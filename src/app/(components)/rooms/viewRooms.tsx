@@ -8,6 +8,7 @@ import { MdRefresh, MdMenu, MdClose, MdDelete } from "react-icons/md";
 import Link from "next/link";
 import { format } from "date-fns";
 import { hasUserCreatedRoom } from "@/(actions)/user";
+import CurrentRoomIndicator from "../chat/CurrentRoomIndicator";
 
 type TabType = "created" | "joined" | "explore";
 
@@ -121,14 +122,17 @@ export default function ViewRooms({
       >
         <div className="flex justify-between items-center border-b border-gray-200">
           <h1 className="text-xl font-bold p-4">Salas</h1>
-          <button
-            onClick={fetchRooms}
-            disabled={loading}
-            className="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
-            title="Atualizar salas"
-          >
-            <MdRefresh className={`h-5 w-5 ${loading ? "animate-spin" : ""}`} />
-          </button>
+          <div className="flex items-center gap-2 mr-4">
+            <CurrentRoomIndicator />
+            <button
+              onClick={fetchRooms}
+              disabled={loading}
+              className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+              title="Atualizar salas"
+            >
+              <MdRefresh className={`h-5 w-5 ${loading ? "animate-spin" : ""}`} />
+            </button>
+          </div>
         </div>
 
         <div className="flex border-b border-gray-200">

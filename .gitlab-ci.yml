@@ -15,9 +15,7 @@ release-job:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
   script:
-    - docker build 
-        --build-arg NEXT_PUBLIC_ABLY_API_KEY="$NEXT_PUBLIC_ABLY_API_KEY"
-        -t $CONTAINER_IMAGE .
+    - docker build -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_IMAGE
   after_script:
     - docker logout

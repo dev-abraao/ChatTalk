@@ -34,7 +34,7 @@ export default function ChatContainer() {
             refreshTrigger={refreshRooms}
           />
         </div>
-        <div className="flex-1 flex flex-col w-full absolute inset-0">
+        <div className="flex-1 flex flex-col w-full absolute inset-0 pt-16">
           <div className="flex-1 overflow-scroll">
             <ChatBox />
           </div>

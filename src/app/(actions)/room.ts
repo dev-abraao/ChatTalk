@@ -213,3 +213,22 @@ export async function deleteRoom(roomId: string) {
     },
   })
 }
+
+export async function getRoomById(roomId: string) {
+  const room = await prisma.rooms.findUnique({
+    where: { id: roomId },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      created_at: true,
+      owner_id: true,
+    },
+  });
+
+  if (!room) {
+    throw new Error("Room not found");
+  }
+
+  return room;
+}

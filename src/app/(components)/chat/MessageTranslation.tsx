@@ -10,12 +10,14 @@ interface MessageTranslationProps {
   originalText: string;
   onTranslationToggle?: (isTranslated: boolean) => void;
   isMyMessage?: boolean;
+  isLastFewMessages?: boolean;
 }
 
 export default function MessageTranslation({ 
   originalText, 
   onTranslationToggle,
-  isMyMessage = false
+  isMyMessage = false,
+  isLastFewMessages = false
 }: MessageTranslationProps) {
   const { preferredLanguage } = useTranslation();
   const [translatedText, setTranslatedText] = useState<string>('');
@@ -24,7 +26,9 @@ export default function MessageTranslation({
   const [targetLanguage, setTargetLanguage] = useState(preferredLanguage || 'pt-BR');
   const [, setDetectedLanguage] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [shouldDropUpward, setShouldDropUpward] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const languageOptions = [
     { code: 'pt-BR', name: 'Português', flag: <BrazilFlag width={14} height={10} /> },
@@ -44,6 +48,64 @@ export default function MessageTranslation({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Calcular posição do dropdown baseado no container de chat
+  useEffect(() => {
+    if (isDropdownOpen && buttonRef.current) {
+      const updatePosition = () => {
+        const button = buttonRef.current;
+        if (!button) return;
+
+        // Se é uma das últimas mensagens, sempre abrir para cima
+        if (isLastFewMessages) {
+          setShouldDropUpward(true);
+          return;
+        }
+
+        // Encontrar o container de scroll do chat
+        const scrollContainer = button.closest('div[class*="overflow-y-auto"]') as HTMLElement;
+        
+        if (scrollContainer) {
+          const buttonRect = button.getBoundingClientRect();
+          const containerRect = scrollContainer.getBoundingClientRect();
+          
+          // Calcular espaço disponível abaixo do botão dentro do container
+          const spaceBelow = containerRect.bottom - buttonRect.bottom;
+          const dropdownHeight = 85;
+          
+          // Se há menos espaço que o necessário, abrir para cima
+          const shouldGoUp = spaceBelow < dropdownHeight;
+          setShouldDropUpward(shouldGoUp);
+        } else {
+          // Fallback: usar viewport
+          const rect = button.getBoundingClientRect();
+          const isInBottomHalf = rect.top > window.innerHeight * 0.6;
+          setShouldDropUpward(isInBottomHalf);
+        }
+      };
+
+      updatePosition();
+      const timeout = setTimeout(updatePosition, 10);
+      return () => clearTimeout(timeout);
+    }
+  }, [isDropdownOpen, isLastFewMessages]);
+
+  // Fechar dropdown quando scroll acontece
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+
+    const handleScroll = () => {
+      setIsDropdownOpen(false);
+    };
+
+    // Procurar pelo container de scroll específico do chat
+    const scrollContainer = document.querySelector('div[class*="overflow-y-auto"][class*="h-full"]') as HTMLElement;
+    
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+      return () => scrollContainer.removeEventListener('scroll', handleScroll);
+    }
+  }, [isDropdownOpen]);
 
   // Atualizar idioma preferido quando mudar
   useEffect(() => {
@@ -113,8 +175,9 @@ export default function MessageTranslation({
         </button>
 
         {!isTranslated && (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
+              ref={buttonRef}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className={`text-xs bg-transparent border-none outline-none pl-6 pr-2 flex items-center gap-1 hover:opacity-75 transition-opacity ${
                 isMyMessage ? 'text-white' : 'text-[#7A80DA]'
@@ -130,7 +193,16 @@ export default function MessageTranslation({
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 min-w-[120px]">
+              <div 
+                className={`absolute left-0 bg-white border border-gray-200 rounded shadow-lg z-[9999] min-w-[120px] max-h-[80px] overflow-y-auto ${
+                  shouldDropUpward 
+                    ? 'bottom-full mb-1' 
+                    : 'top-full mt-1'
+                }`}
+                style={{
+                  transform: shouldDropUpward ? 'translateY(0)' : 'translateY(0)'
+                }}
+              >
                 {languageOptions.map((option) => (
                   <button
                     key={option.code}
