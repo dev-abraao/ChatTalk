@@ -3,6 +3,7 @@ import { Inter, Lobster } from "next/font/google";
 import { AblyProvider } from "./contexts/AblyContext";
 import { TranslationProvider } from "./contexts/TranslationContext";
 import "./globals.css";
+import { getAblyKey } from "./(actions)/ably";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,12 +22,12 @@ export const metadata: Metadata = {
   description: "Um chat para conversar com seus amigos",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  const ablyKey = await getAblyKey();
   
   if (!ablyKey) {
     console.error('Layout - NEXT_PUBLIC_ABLY_API_KEY is undefined');
@@ -35,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={lobster.variable}>
       <body className={inter.className}>
-        <AblyProvider ABLY_API_KEY={ablyKey}>
+        <AblyProvider ABLY_API_KEY={ablyKey || undefined}>
           <TranslationProvider>
             {children}
           </TranslationProvider>
