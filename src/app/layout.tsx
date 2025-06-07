@@ -3,7 +3,6 @@ import { Inter, Lobster } from "next/font/google";
 import { AblyProvider } from "./contexts/AblyContext";
 import { TranslationProvider } from "./contexts/TranslationContext";
 import "./globals.css";
-import { getAblyKey } from "./(actions)/ably";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +26,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ablyKey = process.env.NODE_ENV === "production" ? await getAblyKey() : process.env.NEXT_PUBLIC_ABLY_API_KEY;
+  const ablyKey = 'NhJcoA.Nyx0fQ:GYtfcRdXXu-_DEno3r8dS8rJBl_ojYaSTVLSfYtaV3U';
   
   if (!ablyKey) {
     console.error('Layout - NEXT_PUBLIC_ABLY_API_KEY is undefined');
