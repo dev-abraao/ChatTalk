@@ -8,7 +8,7 @@ interface TranslationResult {
 }
 
 export class LibreTranslator {
-  private endpoint = 'http://195.200.0.138:5000';
+  private endpoint = 'https://translation.slocksert.dev';
   private apiKey = process.env.LIBRETRANSLATE_API_KEY; // Substitua pela API key gerada
   private debug = false; // Controla se os logs de debug são exibidos
 
