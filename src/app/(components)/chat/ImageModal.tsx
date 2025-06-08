@@ -10,7 +10,11 @@ interface ImageModalProps {
   imageUrl: string;
 }
 
-export default function ImageModal({ isOpen, onClose, imageUrl }: ImageModalProps) {
+export default function ImageModal({
+  isOpen,
+  onClose,
+  imageUrl,
+}: ImageModalProps) {
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -32,11 +36,11 @@ export default function ImageModal({ isOpen, onClose, imageUrl }: ImageModalProp
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
-      <div 
+      <div
         className="relative max-w-full max-h-full"
         onClick={(e) => e.stopPropagation()}
       >
@@ -47,12 +51,12 @@ export default function ImageModal({ isOpen, onClose, imageUrl }: ImageModalProp
         >
           <MdClose size={24} />
         </button>
-        
+
         <div className="relative">
           <Image
             src={imageUrl}
             alt="Imagem ampliada"
-            width={1200}
+            width={800}
             height={800}
             className="max-h-[90vh] max-w-[90vw] object-contain rounded"
             style={{ maxHeight: "90vh", maxWidth: "90vw" }}

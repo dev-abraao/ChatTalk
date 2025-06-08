@@ -10,6 +10,7 @@ import ImageModal from "./ImageModal";
 import VideoModal from "./VideoModal";
 import UserProfileModal from "./UserProfileModal";
 import MessageTranslation from "./MessageTranslation";
+import { format } from "date-fns";
 
 interface ChatMessage {
   id?: string;
@@ -169,6 +170,11 @@ function ChatBox() {
     }
   }, [allMessages, isAutoScroll, scrollToBottom, dbMessages.length]);
 
+  const formatMessageTime = (timestamp: number | Date | undefined) => {
+    if (!timestamp) return "";
+    return format(new Date(timestamp), "HH:mm");
+  };
+
   return (
     <div className="flex-1 overflow-hidden">
       <div
@@ -203,8 +209,15 @@ function ChatBox() {
             const fileType =
               msg.metadata?.fileType ||
               (msg.type === "video" ? "video" : "image");
-            const userImageUrl = msg.metadata?.userImageUrl;
-            const isLastFewMessages = index >= allMessages.length - 2; // últimas 2 mensagens
+
+            // Fix: Use your own ImageUrl when it's your message and userImageUrl is not available
+            const userImageUrl = isMyMessage
+              ? msg.metadata?.userImageUrl || ImageUrl
+              : msg.metadata?.userImageUrl;
+
+            const isLastFewMessages = index >= allMessages.length - 2;
+            const messageTime = formatMessageTime(msg.timestamp);
+
             return (
               <div
                 key={msg.id}
@@ -216,7 +229,7 @@ function ChatBox() {
                   <div className="flex-shrink-0 mr-2">
                     {userImageUrl ? (
                       <Image
-                        src={userImageUrl}
+                        src={userImageUrl || "/placeholder.svg"}
                         width={32}
                         height={32}
                         alt={`Avatar de ${msg.metadata?.username || "Usuário"}`}
@@ -263,11 +276,20 @@ function ChatBox() {
                       : "bg-white shadow-md"
                   }`}
                 >
-                  {!isMyMessage && (
-                    <div className="text-xs text-[#7A80DA] font-semibold mb-1">
-                      {msg.metadata?.username || "Usuário"}
+                  <div className="flex justify-between items-center mb-1">
+                    {!isMyMessage && (
+                      <div className="text-sm text-[#7A80DA] font-semibold">
+                        {msg.metadata?.username || "Usuário"}
+                      </div>
+                    )}
+                    <div
+                      className={`text-xs ${
+                        isMyMessage ? "text-white/70" : "text-gray-400"
+                      } ml-2`}
+                    >
+                      {messageTime}
                     </div>
-                  )}{" "}
+                  </div>
                   {fileUrl && (
                     <div className="mb-2 mt-1">
                       {fileType === "video" ? (
@@ -292,7 +314,7 @@ function ChatBox() {
                           className="cursor-pointer"
                         >
                           <Image
-                            src={fileUrl}
+                            src={fileUrl || "/placeholder.svg"}
                             width={300}
                             height={300}
                             priority
@@ -310,7 +332,7 @@ function ChatBox() {
                     (!hasMedia ||
                       (msg.text !== "📷 Imagem" &&
                         msg.text !== "🎥 Vídeo")) && (
-                      <MessageTranslation 
+                      <MessageTranslation
                         originalText={msg.text}
                         isMyMessage={isMyMessage}
                         isLastFewMessages={isLastFewMessages}
@@ -321,14 +343,16 @@ function ChatBox() {
                   <div className="flex-shrink-0 ml-2">
                     {userImageUrl ? (
                       <Image
-                        src={userImageUrl}
+                        src={userImageUrl || "/placeholder.svg"}
                         width={32}
                         height={32}
-                        alt={`Avatar de ${msg.metadata?.username || "Usuário"}`}
+                        alt={`Avatar de ${
+                          msg.metadata?.username || myUsername || "Usuário"
+                        }`}
                         className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() =>
                           handleUserImageClick(
-                            msg.metadata?.username || "Usuário",
+                            msg.metadata?.username || myUsername || "Usuário",
                             userImageUrl || null
                           )
                         }
@@ -338,7 +362,7 @@ function ChatBox() {
                         className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center border-2 border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() =>
                           handleUserImageClick(
-                            msg.metadata?.username || "Usuário",
+                            msg.metadata?.username || myUsername || "Usuário",
                             userImageUrl || null
                           )
                         }
@@ -367,19 +391,16 @@ function ChatBox() {
         )}
         <div ref={messagesEndRef} />
       </div>{" "}
-      {/* Image Modal */}
       <ImageModal
         isOpen={!!selectedImage}
         onClose={() => setSelectedImage(null)}
         imageUrl={selectedImage || ""}
       />
-      {/* Video Modal */}
       <VideoModal
         isOpen={!!selectedVideo}
         onClose={() => setSelectedVideo(null)}
         videoUrl={selectedVideo || ""}
       />
-      {/* User Profile Modal */}
       <UserProfileModal
         isOpen={isUserProfileModalOpen}
         onClose={closeUserProfileModal}

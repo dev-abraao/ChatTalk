@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useTranslation } from '../../contexts/TranslationContext';
-import BrazilFlag from '../icons/BrazilFlag';
-import USFlag from '../icons/USFlag';
+import { useTranslation } from "../../contexts/TranslationContext";
+import BrazilFlag from "../icons/BrazilFlag";
+import USFlag from "../icons/USFlag";
 
 interface TranslationSettingsModalProps {
   isOpen: boolean;
@@ -13,10 +13,7 @@ export default function TranslationSettingsModal({
   isOpen,
   onClose,
 }: TranslationSettingsModalProps) {
-  const { 
-    preferredLanguage,
-    setPreferredLanguage
-  } = useTranslation();
+  const { preferredLanguage, setPreferredLanguage } = useTranslation();
 
   // Usar as funções do contexto diretamente
   const handleLanguageChange = (language: string) => {
@@ -25,23 +22,23 @@ export default function TranslationSettingsModal({
 
   // Função para renderizar a bandeira baseada no código do idioma
   const renderFlag = (code: string) => {
-    if (code === 'pt-BR') {
+    if (code === "pt-BR") {
       return <BrazilFlag width={16} height={12} />;
-    } else if (code === 'en') {
+    } else if (code === "en") {
       return <USFlag width={16} height={12} />;
     }
     return null;
   };
-  
+
   const languages = [
-    { code: 'pt-BR', name: 'Português (Brasil)' },
-    { code: 'en', name: 'English' },
+    { code: "pt-BR", name: "Português (Brasil)" },
+    { code: "en", name: "English" },
   ];
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-gray-800">
@@ -49,14 +46,13 @@ export default function TranslationSettingsModal({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
+            className="text-gray-500 hover:text-gray-700 text-2xl "
           >
             ×
           </button>
         </div>
 
         <div className="space-y-6">
-          {/* Idioma Preferido */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Idioma Preferido para Tradução

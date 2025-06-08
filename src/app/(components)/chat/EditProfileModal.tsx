@@ -72,7 +72,6 @@ export default function EditProfileModal() {
               </h2>
             </div>
             <form action={action} className="p-6">
-              {/* Profile Image Section */}
               <div className="flex flex-col items-center mb-6">
                 <div
                   className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden mb-3 cursor-pointer border-2 border-[#7A80DA]"
@@ -123,7 +122,6 @@ export default function EditProfileModal() {
                 </p>
               </div>
 
-              {/* Username Field */}
               <div className="mb-4">
                 <label
                   htmlFor="username"
@@ -152,7 +150,6 @@ export default function EditProfileModal() {
                 )}
               </div>
 
-              {/* Bio Field */}
               <div className="mb-4">
                 <label
                   htmlFor="bio"

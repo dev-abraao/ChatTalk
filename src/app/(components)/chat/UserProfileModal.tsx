@@ -127,7 +127,7 @@ export default function UserProfileModal({
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Bio
                 </label>
-                <div className="w-full text-black rounded-lg border border-gray-300 p-3 bg-gray-50 min-h-[80px]">
+                <div className="w-full break-words overflow-y-scroll h-3 text-black rounded-lg border border-gray-300 p-3 bg-gray-50 min-h-[80px]">
                   {profile?.bio || "Nenhuma bio disponível"}
                 </div>
               </div>

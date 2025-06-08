@@ -21,29 +21,41 @@ export default function ChatContainer() {
 
   const handleRoomCreated = () => {
     setIsCreateRoomModalOpen(false);
-    setRefreshRooms(prev => prev + 1);
+    setRefreshRooms((prev) => prev + 1);
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-gray-50">
       <Header />
-      <div className="flex flex-1 overflow-hidden relative">
-        <div className="z-30">
-          <ViewRooms 
+      <div className="flex flex-1 overflow-hidden">
+        <div className="hidden lg:block">
+          <ViewRooms
             onOpenCreateRoomModal={handleOpenCreateRoomModal}
             refreshTrigger={refreshRooms}
           />
         </div>
-        <div className="flex-1 flex flex-col w-full absolute inset-0 pt-16">
-          <div className="flex-1 overflow-scroll">
-            <ChatBox />
-          </div>
-          <div className="p-2 sm:p-4 shadow-lg bg-white">
-            <InputText />
+
+        <div className="lg:hidden">
+          <ViewRooms
+            onOpenCreateRoomModal={handleOpenCreateRoomModal}
+            refreshTrigger={refreshRooms}
+          />
+        </div>
+
+        <div className="flex-1 flex justify-center lg:ml-0">
+          <div className="w-full max-w-8xl lg:px-6 flex flex-col">
+            <div className="flex-1 bg-white lg:rounded-lg lg:shadow-sm lg:border lg:border-gray-200 lg:my-4 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-scroll">
+                <ChatBox />
+              </div>
+              <div className="p-4 border-t border-gray-100 bg-white lg:rounded-b-lg">
+                <InputText />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      
+
       <CreateRoomModal
         isOpen={isCreateRoomModalOpen}
         onClose={handleCloseCreateRoomModal}

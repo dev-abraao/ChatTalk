@@ -43,7 +43,6 @@ function InputText() {
         return;
       }
 
-      // Se tivermos um arquivo (imagem ou vídeo), envie a mensagem com metadados apropriados
       if (fileUrl) {
         const isVideo = fileType === "video";
         const displayText = message || (isVideo ? "🎥 Vídeo" : "📷 Imagem");
@@ -52,7 +51,7 @@ function InputText() {
           text: displayText,
           metadata: {
             username,
-            imageUrl: fileUrl, // Mantém compatibilidade com código existente
+            imageUrl: fileUrl,
             fileUrl,
             fileType,
             userImageUrl,
@@ -76,7 +75,6 @@ function InputText() {
           fileUrl,
           type: fileUrl ? fileType || "image" : "text",
         });
-        //console.log("Mensagem salva no banco de dados");
       }
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
@@ -92,7 +90,6 @@ function InputText() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Verificar se o tipo de arquivo é suportado
     if (!isFileTypeSupported(file.type)) {
       alert(
         "Tipo de arquivo não suportado. Por favor, selecione uma imagem (JPG, PNG, GIF, WebP) ou vídeo (MP4, WebM, MOV)."
@@ -100,10 +97,9 @@ function InputText() {
       return;
     }
 
-    // Verificar tamanho - limite maior para vídeos
     const maxSize = file.type.startsWith("video/")
       ? 50 * 1024 * 1024
-      : 5 * 1024 * 1024; // 50MB para vídeos, 5MB para imagens
+      : 5 * 1024 * 1024;
     if (file.size > maxSize) {
       const maxSizeText = file.type.startsWith("video/") ? "50MB" : "5MB";
       alert(
@@ -113,10 +109,8 @@ function InputText() {
     }
     setIsUploading(true);
     try {
-      // Determinar tipo de arquivo
       const fileType = getFileType(file.type);
 
-      // Ler o arquivo como buffer e converter para array de números
       const buffer = await file.arrayBuffer();
       const uint8Array = new Uint8Array(buffer);
       const bufferArray = Array.from(uint8Array);
@@ -128,14 +122,11 @@ function InputText() {
         size: file.size,
       };
 
-      // Gerar ID único para a mensagem
       const messageId = uuidv4();
 
-      // Fazer upload para o MinIO
       const result = await getFileUploadUrl(fileData, file.type, messageId);
 
       if (result?.fileUrl) {
-        // Criar um evento sintético para evitar problemas com preventDefault()
         const event = new CustomEvent("submit") as unknown as React.FormEvent;
         await handleSendMessage(event, result.fileUrl, fileType);
       }
@@ -161,7 +152,6 @@ function InputText() {
         className="hidden"
       />
 
-      {/* Botão de clipe para upload de arquivo */}
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
