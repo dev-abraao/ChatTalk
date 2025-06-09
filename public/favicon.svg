@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Gradiente de fundo -->
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6b21a8;stop-opacity:1" />
+    </linearGradient>
+    <!-- Filtro de sombra -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <g>
+    <!-- Fundo com gradiente -->
+    <circle cx="32" cy="32" r="30" fill="url(#grad1)" />
+    
+    <!-- Balão de fala com sombra -->
+    <path d="M16 20h32v20H30l-8 8v-8H16z" 
+          fill="#ffffff" filter="url(#shadow)"/>
+  </g>
+</svg>
