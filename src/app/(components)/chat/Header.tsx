@@ -9,7 +9,7 @@ const Header = () => {
   const [isTranslationModalOpen, setIsTranslationModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-row shadow-sm shadow-slate-600 justify-between items-center w-full z-30 m-0 p-4 px-8 lg:px-10 bg-[#7A80DA] text-white border-b border-[#6269c5]">
+    <div className="flex fixed flex-row shadow-sm shadow-slate-600 justify-between items-center w-full z-30 m-0 p-4 px-8 lg:px-10 bg-[#7A80DA] text-white border-b border-[#6269c5]">
       <div></div>
       <h5 className="title text-2xl lg:text-5xl cursor-pointer font-semibold truncate">
         ChatTalk!

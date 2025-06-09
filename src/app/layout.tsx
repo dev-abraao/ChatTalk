@@ -34,6 +34,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={lobster.variable}>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+      </head>
       <body className={inter.className}>
         <AblyProvider ABLY_API_KEY={ablyKey || undefined}>
           <TranslationProvider>
